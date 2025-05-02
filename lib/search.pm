@@ -21,15 +21,15 @@ sub search_data {
     my $dbh = DBI->connect($dsn, $user, $password, { RaiseError => 1, AutoCommit => 1 })
         or die "DB Connect error: $DBI::errstr";
 
-    # Use full-text search and trigram similarity
+    # Use full-text search and trigram similarity, return similarity score instead of id
     my $sth = $dbh->prepare(
         q{
-            SELECT id, title, description
+            SELECT GREATEST(similarity(title, ?), similarity(description, ?)) AS similarity_score, title, description
             FROM articles
             WHERE tsv @@ plainto_tsquery('english', ?)
                OR similarity(title, ?) > 0.3
                OR similarity(description, ?) > 0.3
-            ORDER BY GREATEST(similarity(title, ?), similarity(description, ?)) DESC
+            ORDER BY similarity_score DESC
             LIMIT 20
         }
     );
