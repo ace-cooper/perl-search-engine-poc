@@ -19,4 +19,4 @@ RUN cpanm --notest Dancer2 JSON DBI DBD::Pg Dotenv Plack::Test Test::More HTTP::
 EXPOSE 3000
 
 # Comando para rodar o app
-CMD ["perl", "app.pl"]
+CMD ["perl", "./bin/app.pl"]

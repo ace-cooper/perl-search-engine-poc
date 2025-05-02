@@ -3,21 +3,22 @@ use warnings;
 use Test::More tests => 2;
 use Plack::Test;
 use HTTP::Request::Common;
-use Dancer2;
+use FindBin;
+use lib "$FindBin::Bin/../lib";
 
-# Carrega a aplicação
-require './app.pl';
+
+require "$FindBin::Bin/../bin/app.pl";
 
 my $app = Dancer2->psgi_app;
 
 test_psgi $app, sub {
     my $cb = shift;
 
-    # Teste de busca existente
+   
     my $res = $cb->(GET "/search?q=privacy");
-    ok($res->content =~ /Privacy First Search/, "Busca retorna resultado esperado");
+    ok($res->content =~ /Privacy First Search/, "Search for 'privacy' returns results");
 
-    # Teste de busca inexistente
+ 
     $res = $cb->(GET "/search?q=banana");
-    ok($res->content !~ /Privacy First Search/, "Busca vazia retorna vazio");
+    ok($res->content !~ /Privacy First Search/, "Search for 'banana' returns no results");
 };
