@@ -11,7 +11,7 @@ get '/search' => sub {
     my $query = query_parameters->get('q') // '';
     my $results = search::search_data($query);
     
-    header('Content-Type' => 'application/json');
+    response_header('Content-Type' => 'application/json');
 
     return to_json($results);
 };
